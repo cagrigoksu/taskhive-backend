@@ -19,7 +19,7 @@ builder.Services.AddSession(options => {
 // HttpClient
 builder.Services.AddHttpClient("api-gateway", httpClient =>
 {
-    httpClient.BaseAddress = new Uri("https://taskhive-api-gateway.azurewebsites.net"); // production
+    httpClient.BaseAddress = new Uri("localhost:7062"); // development
 });
 
 // CORS Policy
