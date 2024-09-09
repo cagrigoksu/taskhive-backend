@@ -21,8 +21,6 @@ namespace TaskHive.Controllers
         [EnableCors("default")]
         public async Task<IActionResult> LogIn([FromBody] LoginModel dataObject)
         {
-            System.Diagnostics.Debug.WriteLine("7054 data received.");
-
             var email = dataObject.Email;
             var pwd = dataObject.Password;
 
@@ -39,7 +37,6 @@ namespace TaskHive.Controllers
 
             if (result.IsSuccessStatusCode)
             {
-                System.Diagnostics.Debug.WriteLine("7054 received status code SUCCESS.");
                 var data = await result.Content.ReadAsStringAsync();
                 var user = JsonConvert.DeserializeObject<LoginDataModel>(data);
 
@@ -54,7 +51,6 @@ namespace TaskHive.Controllers
                 });
             }
 
-            System.Diagnostics.Debug.WriteLine("7054 received status code FAILED.");
             return Json(null);
         }
 

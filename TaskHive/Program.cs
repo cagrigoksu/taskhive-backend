@@ -1,5 +1,3 @@
-using TaskHive;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,9 +19,7 @@ builder.Services.AddSession(options => {
 // HttpClient
 builder.Services.AddHttpClient("api-gateway", httpClient =>
 {
-    httpClient.BaseAddress = Globals.Production ?
-        new Uri("https://cgu-api-gateway.azurewebsites.net") : // production
-        new Uri("https://localhost:7062"); // development
+    httpClient.BaseAddress = new Uri("https://taskhive-api-gateway.azurewebsites.net"); // production
 });
 
 // CORS Policy
