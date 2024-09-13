@@ -11,11 +11,16 @@ namespace TaskHive.Controllers
     {
         private readonly IHttpClientFactory? _httpClientFactory;
         private readonly HttpClient? _apiClient;
+        private readonly JsonSerializerOptions? _options;
 
         public ProjectController(IHttpClientFactory? httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
             _apiClient = _httpClientFactory.CreateClient("api-gateway");
+            _options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
         }
 
         [HttpGet("GetProjectListAsync")]
@@ -27,7 +32,8 @@ namespace TaskHive.Controllers
             if(response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                var projectList = JsonSerializer.Deserialize<List<ProjectModel>>(result);
+                var projectList = JsonSerializer.Deserialize<List<ProjectModel>>(result, _options);
+                    
                 return Ok(projectList);
             }
             
