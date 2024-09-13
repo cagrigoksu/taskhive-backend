@@ -53,4 +53,4 @@ jobs:
           app-name: 'taskhive-backend'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_06D1202B5BC44F68AC4A6278DC7CE31B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0E0E28E8342A43F0BDC30BB23020E876 }}
