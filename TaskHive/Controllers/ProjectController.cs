@@ -27,7 +27,7 @@ namespace TaskHive.Controllers
         [EnableCors("default")]
         public async Task<IActionResult> GetProjectListAsync()
         {
-            var response = await _apiClient.GetAsync("gateway/Project/GetProjectListAsync");
+            var response = await _apiClient.GetAsync("gateway/Project/getProjectListAsync");
             
             if(response.IsSuccessStatusCode)
             {
