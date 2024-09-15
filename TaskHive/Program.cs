@@ -19,7 +19,7 @@ builder.Services.AddSession(options => {
 // HttpClient
 builder.Services.AddHttpClient("api-gateway", httpClient =>
 {
-    httpClient.BaseAddress = new Uri("https://localhost:7063"); // development
+    httpClient.BaseAddress = new Uri("http://localhost:7063"); // development
 });
 
 // CORS Policy
