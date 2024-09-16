@@ -46,7 +46,7 @@ namespace TaskHive.Controllers
 
                 return Json(new
                 {
-                    user = user.Id,
+                    userId = user.Id,
                     email = user.Email
                 });
             }
