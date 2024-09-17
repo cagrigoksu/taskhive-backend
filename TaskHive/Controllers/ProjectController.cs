@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TaskHive.Models;
+using TaskHive.Models.Project;
 
 namespace TaskHive.Controllers
 {
@@ -23,11 +23,11 @@ namespace TaskHive.Controllers
                 };
         }
 
-        [HttpGet("GetProjectListAsync")]
+        [HttpGet("GetProjectList")]
         [EnableCors("default")]
         public async Task<IActionResult> GetProjectListAsync()
         {
-            var response = await _apiClient.GetAsync("gateway/Project/getProjectListAsync");
+            var response = await _apiClient.GetAsync("gateway/Project/get-project-list");
             
             if(response.IsSuccessStatusCode)
             {
