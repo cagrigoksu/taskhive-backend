@@ -26,20 +26,21 @@ namespace TaskHive.Controllers
             _gateway = "gateway/User/";
         }
 
-        [HttpPost("AddUserProfile")]
+        [HttpPost("AddOrEditUserProfile")]
         [EnableCors("default")]
-        public async Task<IActionResult> AddUserProfileAsync([FromForm] UserProfileModel userProfile)
+        public async Task<IActionResult> AddOrEditUserProfile([FromBody] UserProfileModel userProfile)
         {
             var content = new Dictionary<string, string>
             {
+                ["userId"] = userProfile.UserId.ToString(),
                 ["name"] = userProfile.Name,
                 ["surname"] = userProfile.Surname,
-                ["email"] = userProfile.Email,
                 ["phoneNumber"] = userProfile.PhoneNumber,
                 ["department"] = userProfile.Department,
                 ["role"] = userProfile.Role
             };
-            var response = _apiClient.PostAsync(_gateway+"addUserProfile", new FormUrlEncodedContent(content)).Result;
+
+            var response = _apiClient.PostAsync(_gateway+"add-or-edit-user-profile", new FormUrlEncodedContent(content)).Result;
                 
             if(response.IsSuccessStatusCode)
             {
@@ -52,29 +53,24 @@ namespace TaskHive.Controllers
             return StatusCode((int)response.StatusCode, response.ReasonPhrase);
         }
 
-        [HttpPost("EditUserProfile")]
+        [HttpPost("EditUserEmail")]
         [EnableCors("default")]
-        public async Task<IActionResult> EditUserProfileAsync([FromForm] UserProfileModel userProfile)
+        public async Task<IActionResult> EditUserEmailAsync([FromBody] UserModel user)
         {
             var content = new Dictionary<string,string>
             {
-                ["userId"] = userProfile.UserId.ToString(),
-                ["name"] = userProfile.Name,
-                ["surname"] = userProfile.Surname,
-                ["email"] = userProfile.Email,
-                ["phoneNumber"] = userProfile.PhoneNumber,
-                ["department"] = userProfile.Department,
-                ["role"] = userProfile.Role
+                ["userId"] = user.UserId.ToString(),
+                ["email"] = user.Email
             };
 
-            var response = _apiClient.PostAsync(_gateway+"editUserProfile", new FormUrlEncodedContent(content)).Result;
+            var response = _apiClient.PostAsync(_gateway+"edit-user-email", new FormUrlEncodedContent(content)).Result;
                 
             if(response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                userProfile = JsonSerializer.Deserialize<UserProfileModel>(result, _options);
+                user = JsonSerializer.Deserialize<UserModel>(result, _options);
                     
-                return Ok(userProfile);
+                return Ok(user);
             }
             
             return StatusCode((int)response.StatusCode, response.ReasonPhrase);
@@ -84,7 +80,7 @@ namespace TaskHive.Controllers
         [EnableCors("default")]
         public async Task<IActionResult> GetUserProfileByUserIdAsync(int userId)
         {
-            var response = await _apiClient.GetAsync(_gateway+"getUserProfileByUserId/" + userId.ToString());
+            var response = await _apiClient.GetAsync(_gateway+"get-user-profile-by-userId/" + userId.ToString());
                 
             if(response.IsSuccessStatusCode)
             {

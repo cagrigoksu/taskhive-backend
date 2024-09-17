@@ -1,4 +1,4 @@
-﻿namespace TaskHive.Models
+﻿namespace TaskHive.Models.UserAuth
 {
     public class LoginModel
     {
