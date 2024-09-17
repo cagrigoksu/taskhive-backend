@@ -1,4 +1,4 @@
-namespace TaskHive.Models
+namespace TaskHive.Models.Project
 {
     public class ProjectModel
     {

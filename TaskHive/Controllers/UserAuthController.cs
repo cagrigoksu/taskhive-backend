@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using TaskHive.Models;
 using TaskHive.Models.Data;
+using TaskHive.Models.UserAuth;
 
 namespace TaskHive.Controllers
 {
@@ -17,9 +17,9 @@ namespace TaskHive.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [HttpPost("LogIn")]
+        [HttpPost("Login")]
         [EnableCors("default")]
-        public async Task<IActionResult> LogIn([FromBody] LoginModel dataObject)
+        public async Task<IActionResult> Login([FromBody] LoginModel dataObject)
         {
             var email = dataObject.Email;
             var pwd = dataObject.Password;
@@ -54,9 +54,9 @@ namespace TaskHive.Controllers
             return Json(null);
         }
 
-        [HttpPost("LogOn")]
+        [HttpPost("Logon")]
         [EnableCors("default")]
-        public async Task<IActionResult> LogOn([FromBody] LogonModel dataObject)
+        public async Task<IActionResult> Logon([FromBody] LogonModel dataObject)
         {
 
             var email = dataObject.Email;
@@ -85,7 +85,7 @@ namespace TaskHive.Controllers
 
                 return Json(new
                 {
-                    user = user.Id,
+                    userId = user.Id,
                     email = user.Email
                 });
             }
