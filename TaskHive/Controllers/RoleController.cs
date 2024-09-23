@@ -5,27 +5,31 @@ using TaskHive.Models.Role;
 
 namespace TaskHive
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class RoleController: Controller
     {
           private readonly IHttpClientFactory? _httpClientFactory;
         private readonly HttpClient? _apiClient;
         private readonly JsonSerializerOptions? _options;
+        private readonly string _gateway;
 
         public RoleController(IHttpClientFactory? httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-            _apiClient = _httpClientFactory.CreateClient("api-gateway/Role/");
+            _apiClient = _httpClientFactory.CreateClient("api-gateway");
             _options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
+            _gateway = "gateway/Role/";
         }
 
         [HttpGet("GetRoles")]
         [EnableCors("default")]
         public async Task<IActionResult> GetRolesAsync()
         {
-            var response = await _apiClient.GetAsync("get-roles");
+            var response = await _apiClient.GetAsync(_gateway + "get-roles");
             
             if(response.IsSuccessStatusCode)
             {
