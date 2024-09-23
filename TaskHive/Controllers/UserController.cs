@@ -36,8 +36,8 @@ namespace TaskHive.Controllers
                 ["name"] = userProfile.Name,
                 ["surname"] = userProfile.Surname,
                 ["phoneNumber"] = userProfile.PhoneNumber,
-                ["department"] = userProfile.Department,
-                ["role"] = userProfile.Role
+                ["departmentId"] = userProfile.DepartmentId.ToString(),
+                ["roleId"] = userProfile.RoleId.ToString()
             };
 
             var response = _apiClient.PostAsync(_gateway+"add-or-edit-user-profile", new FormUrlEncodedContent(content)).Result;
