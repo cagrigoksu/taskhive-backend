@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TaskHive.Models.Role;
 
 namespace TaskHive
@@ -11,18 +12,12 @@ namespace TaskHive
     {
           private readonly IHttpClientFactory? _httpClientFactory;
         private readonly HttpClient? _apiClient;
-        private readonly JsonSerializerOptions? _options;
-        private readonly string _gateway;
-
+        private readonly string _gateway = "gateway/Role/";
+        private readonly string _contentType = "application/json";
         public RoleController(IHttpClientFactory? httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
             _apiClient = _httpClientFactory.CreateClient("api-gateway");
-            _options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-            _gateway = "gateway/Role/";
         }
 
         [HttpGet("GetRoles")]
@@ -34,7 +29,7 @@ namespace TaskHive
             if(response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                var roleList = JsonSerializer.Deserialize<List<RoleModel>>(result, _options);
+                var roleList = JsonConvert.DeserializeObject<List<RoleModel>>(result);
                     
                 return Ok(roleList);
             }
