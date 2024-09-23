@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using TaskHive.Models;
 using TaskHive.Models.Project;
 
 namespace TaskHive.Controllers
@@ -50,6 +51,40 @@ namespace TaskHive.Controllers
             {
                 var result = await response.Content.ReadAsStringAsync();
                 var projectList = JsonConvert.DeserializeObject<List<ProjectModel>>(result);
+                    
+                return Ok(projectList);
+            }
+            
+            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        }
+
+        [HttpGet("GetStatusEnum")]
+        [EnableCors("default")]
+        public async Task<IActionResult> GetStatusEnum()
+        {
+            var response = await _apiClient.GetAsync(_gateway + "get-status-enum");
+
+            if(response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var projectList = JsonConvert.DeserializeObject<List<StatusModel>>(result);
+                    
+                return Ok(projectList);
+            }
+            
+            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        }
+
+        [HttpGet("GetPriorityEnum")]
+        [EnableCors("default")]
+        public async Task<IActionResult> GetPriorityEnum()
+        {
+            var response = await _apiClient.GetAsync(_gateway + "get-priority-enum");
+
+            if(response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var projectList = JsonConvert.DeserializeObject<List<PriorityModel>>(result);
                     
                 return Ok(projectList);
             }
