@@ -57,5 +57,35 @@ namespace TaskHive.Controllers
             return StatusCode((int)response.StatusCode, response.ReasonPhrase);
         }
 
+        public async Task<IActionResult> GetStatusEnum()
+        {
+            var response = await _apiClient.GetAsync(_gateway + "get-status-enum");
+
+            if(response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var projectList = JsonConvert.DeserializeObject(result);
+                    
+                return Ok(projectList);
+            }
+            
+            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        }
+
+        public async Task<IActionResult> GetPriorityEnum()
+        {
+            var response = await _apiClient.GetAsync(_gateway + "get-priority-enum");
+
+            if(response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var projectList = JsonConvert.DeserializeObject(result);
+                    
+                return Ok(projectList);
+            }
+            
+            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        }
+
     }
 }
