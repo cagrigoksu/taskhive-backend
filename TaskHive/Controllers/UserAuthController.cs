@@ -11,29 +11,25 @@ namespace TaskHive.Controllers
     public class UserAuthController : Controller
     {
         private readonly IHttpClientFactory? _httpClientFactory;
+        private readonly HttpClient? _apiClient;
+        private readonly string _gateway = "gateway/User/";
+        private readonly string _contentType = "application/json";
+
 
         public UserAuthController(IHttpClientFactory? httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory;
+            _httpClientFactory = httpClientFactory;    
+            _apiClient = _httpClientFactory.CreateClient("api-gateway");          
         }
 
         [HttpPost("Login")]
         [EnableCors("default")]
         public async Task<IActionResult> Login([FromBody] LoginModel dataObject)
         {
-            var email = dataObject.Email;
-            var pwd = dataObject.Password;
+            // serialize to json
+            var content = new StringContent(JsonConvert.SerializeObject(dataObject), null, _contentType);
 
-            IEnumerable<KeyValuePair<string, string>> content = new List<KeyValuePair<string, string>>
-            {
-                new("email", email),
-                new("password", pwd)
-            };
-
-            // create client and post 
-            var apiClient = _httpClientFactory.CreateClient("api-gateway");
-
-            var result = apiClient.PostAsync("gateway/User/login", new FormUrlEncodedContent(content)).Result;
+            var result = _apiClient.PostAsync(_gateway + "login", content).Result;
 
             if (result.IsSuccessStatusCode)
             {
@@ -58,21 +54,9 @@ namespace TaskHive.Controllers
         [EnableCors("default")]
         public async Task<IActionResult> Logon([FromBody] LogonModel dataObject)
         {
+            var content = new StringContent(JsonConvert.SerializeObject(dataObject), null, _contentType);
 
-            var email = dataObject.Email;
-            var pwd = dataObject.Password;
-            var pwdConf = dataObject.PasswordConfirmation;
-
-            IEnumerable<KeyValuePair<string, string>> content = new List<KeyValuePair<string, string>>
-            {
-                new("email", email),
-                new("password", pwd),
-                new("passwordconf", pwdConf)
-            };
-
-            // create client and post
-            var apiClient = _httpClientFactory.CreateClient("api-gateway");
-            var result = apiClient.PostAsync("gateway/User/logon", new FormUrlEncodedContent(content)).Result;
+            var result = _apiClient.PostAsync(_gateway + "logon", content).Result;
 
             if (result.IsSuccessStatusCode)
             {
