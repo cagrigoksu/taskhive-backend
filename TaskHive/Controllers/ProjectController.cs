@@ -42,6 +42,7 @@ namespace TaskHive.Controllers
         }
 
         [HttpPut("EditProject")]
+        [EnableCors("default")]
         public async Task<IActionResult> EditProjectAsync(ProjectModel project)
         {
             
@@ -79,6 +80,7 @@ namespace TaskHive.Controllers
         }
 
         [HttpGet("GetProjectById/{projectId}")]
+        [EnableCors("default")]
         public async Task<IActionResult> GetProjectByIdAsync(int projectId){
 
             var response = await _apiClient.GetAsync(_gateway + "get-project-by-id/" + projectId.ToString());
