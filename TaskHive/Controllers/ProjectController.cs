@@ -23,7 +23,7 @@ namespace TaskHive.Controllers
 
         [HttpPost("CreateProject")]
         [EnableCors("default")]
-        public async Task<IActionResult> CreateProject(ProjectModel project)
+        public async Task<IActionResult> CreateProjectAsync(ProjectModel project)
         {
             
             var jsonContent = new StringContent(JsonConvert.SerializeObject(project), null, _contentType);
@@ -41,6 +41,26 @@ namespace TaskHive.Controllers
                 return StatusCode((int)response.StatusCode, response.ReasonPhrase);
         }
 
+        [HttpPut("EditProject")]
+        public async Task<IActionResult> EditProjectAsync(ProjectModel project)
+        {
+            
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(project), null, _contentType);
+
+            var response = await _apiClient.PutAsync(_gateway + "edit-project", jsonContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadAsStringAsync();
+                    var projectList = JsonConvert.DeserializeObject<ProjectModel>(result);
+
+                    return Ok(projectList);
+                }
+
+                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        }
+
+
         [HttpGet("GetProjects")]
         [EnableCors("default")]
         public async Task<IActionResult> GetProjectsAsync()
@@ -55,6 +75,22 @@ namespace TaskHive.Controllers
                 return Ok(projectList);
             }
             
+            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        }
+
+        [HttpGet("GetProjectById/{projectId}")]
+        public async Task<IActionResult> GetProjectByIdAsync(int projectId){
+
+            var response = await _apiClient.GetAsync(_gateway + "get-project-by-id/" + projectId.ToString());
+
+            if(response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var project = JsonConvert.DeserializeObject<ProjectModel>(result);
+
+                return Ok(project);
+            }
+
             return StatusCode((int)response.StatusCode, response.ReasonPhrase);
         }
 
