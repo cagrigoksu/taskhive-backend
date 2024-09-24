@@ -1,6 +1,6 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TaskHive.Models.User;
 
 namespace TaskHive.Controllers
@@ -12,42 +12,30 @@ namespace TaskHive.Controllers
     {
         private readonly IHttpClientFactory? _httpClientFactory;
          private readonly HttpClient? _apiClient;
-        private readonly JsonSerializerOptions? _options;
-        private readonly string _gateway;
+        private readonly string _gateway = "gateway/User/";
+        private readonly string _contentType = "application/json";
 
         public UserController(IHttpClientFactory? httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
             _apiClient = _httpClientFactory.CreateClient("api-gateway");
-            _options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-            _gateway = "gateway/User/";
         }
 
         [HttpPost("AddOrEditUserProfile")]
         [EnableCors("default")]
         public async Task<IActionResult> AddOrEditUserProfile([FromBody] UserProfileModel userProfile)
         {
-            var content = new Dictionary<string, string>
-            {
-                ["userId"] = userProfile.UserId.ToString(),
-                ["name"] = userProfile.Name,
-                ["surname"] = userProfile.Surname,
-                ["phoneNumber"] = userProfile.PhoneNumber,
-                ["department"] = userProfile.Department,
-                ["role"] = userProfile.Role
-            };
+           
+            var content = new StringContent(JsonConvert.SerializeObject(userProfile), null, _contentType);
 
-            var response = _apiClient.PostAsync(_gateway+"add-or-edit-user-profile", new FormUrlEncodedContent(content)).Result;
+            var response = _apiClient.PostAsync(_gateway + "add-or-edit-user-profile", content).Result;
                 
             if(response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                userProfile = JsonSerializer.Deserialize<UserProfileModel>(result, _options);
+                var profile = JsonConvert.DeserializeObject<UserProfileModel>(result);
                     
-                return Ok(userProfile);
+                return Ok(profile);
             }
             
             return StatusCode((int)response.StatusCode, response.ReasonPhrase);
@@ -57,20 +45,16 @@ namespace TaskHive.Controllers
         [EnableCors("default")]
         public async Task<IActionResult> EditUserEmailAsync([FromBody] UserModel user)
         {
-            var content = new Dictionary<string,string>
-            {
-                ["userId"] = user.UserId.ToString(),
-                ["email"] = user.Email
-            };
+            var content = new StringContent(JsonConvert.SerializeObject(user), null, _contentType);
 
-            var response = _apiClient.PostAsync(_gateway+"edit-user-email", new FormUrlEncodedContent(content)).Result;
+            var response = _apiClient.PostAsync(_gateway + "edit-user-email", content).Result;
                 
             if(response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                user = JsonSerializer.Deserialize<UserModel>(result, _options);
+                var responseData = JsonConvert.DeserializeObject<UserModel>(result);
                     
-                return Ok(user);
+                return Ok(responseData);
             }
             
             return StatusCode((int)response.StatusCode, response.ReasonPhrase);
@@ -80,12 +64,12 @@ namespace TaskHive.Controllers
         [EnableCors("default")]
         public async Task<IActionResult> GetUserProfileByUserIdAsync(int userId)
         {
-            var response = await _apiClient.GetAsync(_gateway+"get-user-profile-by-userId/" + userId.ToString());
+            var response = await _apiClient.GetAsync(_gateway + "get-user-profile-by-userId/" + userId.ToString());
                 
             if(response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                var userProfile = JsonSerializer.Deserialize<UserProfileModel>(result, _options);
+                var userProfile = JsonConvert.DeserializeObject<UserProfileModel>(result);
                     
                 return Ok(userProfile);
             }
